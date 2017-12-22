@@ -1,0 +1,5 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/lukasgrotz/.platformio/penv/bin:/Users/lukasgrotz/anaconda3/bin:/Users/lukasgrotz/.nvm/versions/node/v9.2.0/bin:/Users/lukasgrotz/bin:/usr/local/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/lukasgrotz/lib/node_modules/resin-cli/bin:Applications/Postgres.app/Contents/Versions/latest/bin:/Library/TeX/texbin:/usr/local/share/dotnet:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands"
+    }
+}
