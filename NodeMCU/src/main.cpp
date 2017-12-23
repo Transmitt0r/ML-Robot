@@ -62,21 +62,15 @@ void loop()
             // Match the request
             if (req.indexOf("") != -10) { //checks if you're on the main page
                 if (req.indexOf("/forward") != -1) { 
-                    Serial.println("You clicked forward");
                     swSer.println("forward");
                 }
                 if (req.indexOf("/backward") != -1) { 
-                    Serial.println("You clicked backward");
                     swSer.println("backward");
                 }
-                if (req.indexOf("/left") != -1)
-                { 
-                    Serial.println("You clicked left");
+                if (req.indexOf("/left") != -1) { 
                     swSer.println("left");
                 }
-                if (req.indexOf("/right") != -1)
-                { 
-                    Serial.println("You clicked right");
+                if (req.indexOf("/right") != -1) { 
                     swSer.println("right");
                 }
             }

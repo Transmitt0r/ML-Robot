@@ -5,6 +5,31 @@
 DFRobot2WD robot = DFRobot2WD();
 int code = 0;
 
+String buildString(String dir, int light, obs_t obstacle) {
+    String obstacle_mask = "";
+    if (obstacle == BOTH)
+    {
+        obstacle_mask = "both";
+    }
+    else if (obstacle == LEFT)
+    {
+        obstacle_mask = "left";
+    }
+    else if (obstacle == RIGHT)
+    {
+        obstacle_mask = "right";
+    }
+    else
+    {
+        obstacle_mask = "none";
+    }
+    dir += ",";
+    dir += obstacle;
+    dir += ",";
+    dir += light;
+    return dir;
+}
+
 void setup() {
     // set up Serial connection
     Serial.begin(9600);
@@ -18,7 +43,9 @@ void loop() {
     if (Serial.available())
     {
         inData = Serial.readStringUntil('\r'); // Read line
-        Serial.flush();
+        int light = robot.getLight();
+        obs_t obstacle = robot.obstacleDetect(NULL, NULL);
+        
         if (inData == "forward")
         {
             robot.motorControl(FORWARD, 100, FORWARD, 100);
