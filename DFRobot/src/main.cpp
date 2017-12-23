@@ -5,15 +5,11 @@
 DFRobot2WD robot = DFRobot2WD();
 
 void setup() {
+    // set up Serial connection
     Serial.begin(9600);
-    Serial.println("Interfacing with NodeMCU");
 }
 
 void loop() {
-    Serial.println("Sending Data");
-    Serial.print("{\"light\":");
-    Serial.print(robot.getLight());
-    Serial.print("}");
-    Serial.println();
-    delay(200);
+    Serial.println(robot.getLight());
+    delay(1000);
 }
