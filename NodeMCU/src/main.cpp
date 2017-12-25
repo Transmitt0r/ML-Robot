@@ -1,13 +1,11 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
 #include <SoftwareSerial.h>
 
 // WiFi SSID and Password
 const char *ssid = "ssid";
 const char *password = "password";
 
-HTTPClient http;
 WiFiServer server(80);
 
 SoftwareSerial swSer(D5, D6, false, 256);
@@ -16,14 +14,6 @@ char receivedChars[numChars];
 boolean newData = false;
 
 const char *host = "yourServerIP";
-
-int PostData(String inData)
-{
-    http.begin(host);
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    return http.POST("data=" + inData); // Send the request
-    http.end(); // close connection
-}
 
 void recvWithStartEndMarkers() // A custom function to received serial communication
 {
