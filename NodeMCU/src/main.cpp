@@ -10,88 +10,122 @@ const char *password = "password";
 HTTPClient http;
 WiFiServer server(80);
 
-SoftwareSerial swSer(D0, D1, false, 256);
+SoftwareSerial swSer(D5, D6, false, 256);
+const byte numChars = 64;
+char receivedChars[numChars];
+boolean newData = false;
 
 const char *host = "yourServerIP";
 
-int PostData(String inData) {
+int PostData(String inData)
+{
     http.begin(host);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     return http.POST("data=" + inData); // Send the request
     http.end(); // close connection
 }
 
-void setup() {
-    // Set up Serial and Wifi connection
+void recvWithStartEndMarkers() // A custom function to received serial communication
+{
+    static boolean recvInProgress = false;
+    static byte ndx = 0;
+    char startMarker = '<';
+    char endMarker = '>';
+    char rc;
+
+    while (swSer.available() > 0 && newData == false)
+    {
+        rc = swSer.read();
+
+        if (recvInProgress == true)
+        {
+            if (rc != endMarker) // checks if we reached our endmarker
+            {
+                receivedChars[ndx] = rc;
+                ndx++;
+                if (ndx >= numChars)
+                {
+                    ndx = numChars - 1;
+                }
+            }
+            else
+            {
+                receivedChars[ndx] = '\0'; // terminate the string
+                recvInProgress = false;
+                ndx = 0;
+                newData = true;
+            }
+        }
+
+        else if (rc == startMarker) // sets bool true if we reached our startmarker
+        {
+            recvInProgress = true;
+        }
+    }
+}
+
+void setup()
+{
     Serial.begin(9600);
     swSer.begin(9600);
     // Connect to WiFi network
-    Serial.println();
-    Serial.println();
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
-
     WiFi.begin(ssid, password);
-
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
-        Serial.print(".");
     }
-    Serial.println("");
-    Serial.println("WiFi connected");
-
     // Start the server
     server.begin();
-    Serial.println("Server started");
-
-    // Print the IP address
-    Serial.println(WiFi.localIP());
 }
 
 void loop()
 {
     // Check if a client has connected
     WiFiClient client = server.available();
-    if(client) {
-        delay(100);
-        if (client.available()) {
+    if (client)
+    {
+        delay(1);
+        if (client.available())
+        {
             // Read the first line of the request
-            String req = client.readStringUntil('\r');
-            client.flush();
+            String req = client.readStringUntil('\n');
             // Match the request
-            if (req.indexOf("") != -10) { //checks if you're on the main page
-                if (req.indexOf("/forward") != -1) { 
-                    swSer.println("forward");
+            if (req.indexOf("") != -10)
+            { // prints commands to software serial according to request
+                if (req.indexOf("/forward") != -1)
+                {
+                    swSer.print("<f>");
                 }
-                if (req.indexOf("/backward") != -1) { 
-                    swSer.println("backward");
+                if (req.indexOf("/backward") != -1)
+                {
+                    swSer.print("<b>");
                 }
-                if (req.indexOf("/left") != -1) { 
-                    swSer.println("left");
+                if (req.indexOf("/left") != -1)
+                {
+                    swSer.print("<l>");
                 }
-                if (req.indexOf("/right") != -1) { 
-                    swSer.println("right");
+                if (req.indexOf("/right") != -1)
+                {
+                    swSer.print("<r>");
                 }
+                while (!newData) // waits for new data to be received
+                {
+                    recvWithStartEndMarkers();
+                }
+                // Prepare the response String
+                String s = "HTTP/1.1 200 OK\r\n";
+                s += "Content-Type: application/json\r\n\r\n";
+                s += receivedChars;
+
+                // Send the response to the client
+                client.print(s);
+                newData = false;
             }
-            else {
+            else
+            {
                 Serial.println("invalid request");
                 client.stop();
             }
-            // Prepare the response String
-            String s = "HTTP/1.1 200 OK\r\n";
-            s += "Content-Type: text/html\r\n\r\n";
-            s += "<!DOCTYPE HTML>\r\n<html>\r\n";
-            s += "<br><input type=\"button\" name=\"bl\" value=\"Forward\" onclick=\"location.href='/forward'\">"; // Forward-button
-            s += "<br>";
-            s += "<br><input type=\"button\" name=\"bl\" value=\"Left\" onclick=\"location.href='/left'\">"; // Left-button
-            s += "<br><input type=\"button\" name=\"bl\" value=\"Right\" onclick=\"location.href='/right'\">"; // Right-button
-            s += "</html>\n";
-            s += "<br>";
-            s += "<br><input type=\"button\" name=\"bl\" value=\"Backward\" onclick=\"location.href='/backward'\">"; // Backward-button
-            client.flush();
-            // Send the response to the client
-            client.print(s);
         }
     }
 }
