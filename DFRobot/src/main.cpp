@@ -35,15 +35,15 @@ String buildJson(String dir, float light, obs_t obstacle) // This makes json out
 
     json = "<{";
 
-    json += "\"direction\"=";
+    json += "\"direction\":";
     json += "\"" + dir + "\"";
     json += ",";
 
-    json += "\"obstacle\"=";
+    json += "\"obstacle\":";
     json += "\"" + obstacle2string(obstacle) + "\"";
     json += ",";
 
-    json += "\"light\"=";
+    json += "\"light\":";
     json += light;
 
     json += "}>";
