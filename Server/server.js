@@ -1,12 +1,8 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 const axios = require('axios');
 const esp = "http://192.168.178.67";
 
-// body parser allows us to parse json if we need to
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.get('/', function(req, res) {

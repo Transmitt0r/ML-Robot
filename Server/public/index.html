@@ -12,9 +12,9 @@
         <h1>Control the Robot</h1>
     </div>
     <div class="container" id="control">
-    	<div class="row center-align">
-    		<a v-on:click="forward" class="waves-effect waves-light btn"><i class="material-icons">arrow_upward</i></a>
-    	</div>
+        <div class="row center-align">
+            <a v-on:click="forward" class="waves-effect waves-light btn"><i class="material-icons">arrow_upward</i></a>
+        </div>
         <div class="row">
             <div class="col s6 right-align">
                 <a v-on:click="left" class="waves-effect waves-light btn"><i class="material-icons">arrow_back</i></a>
@@ -24,19 +24,19 @@
             </div>
         </div>
         <div class="row center-align">
-    		<a v-on:click="backward" class="waves-effect waves-light btn"><i class="material-icons">arrow_downward</i></a>
-    	</div>
-    	<div class="row">
-    		<div class="col s4">
-    			{{ Direction }}
-    		</div>
-    		<div class="col s4">
-    			{{ Obstacle }}
-    		</div>
-    		<div class="col s4">
-    			{{ Light }}
-    		</div>
-    	</div>
+            <a v-on:click="backward" class="waves-effect waves-light btn"><i class="material-icons">arrow_downward</i></a>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                {{ Direction }}
+            </div>
+            <div class="col s4">
+                {{ Obstacle }}
+            </div>
+            <div class="col s4">
+                {{ Light }}
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
